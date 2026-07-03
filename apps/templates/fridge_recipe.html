@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}残り物食材レシピ{% endblock %}
+
+{% block content %}
+
+<h1>🍳 残り物食材レシピ</h1>
+
+{% if foods %}
+    <h3>使用する食材</h3>
+
+    <ul>
+        {% for food in foods %}
+            <li>{{ food }}</li>
+        {% endfor %}
+    </ul>
+
+    <div class="recipe-card">
+        {{ recipe }}
+    </div>
+
+{% else %}
+    <p>期限が近い食材はありません。</p>
+{% endif %}
+
+<br>
+
+<a href="/fridge/list">
+    <button>← 冷蔵庫一覧へ戻る</button>
+</a>
+
+{% endblock %}

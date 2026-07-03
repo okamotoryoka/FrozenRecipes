@@ -22,6 +22,12 @@
         <button type="submit">❤️ お気に入り</button>
     </form>
     
+    <form method="POST" action="/recipe/delete/{{ r.id }}">
+    <button type="submit"
+            onclick="return confirm('このレシピを削除しますか？')">
+        🗑️ 削除
+    </button>
+</form>
 
 </div>
 

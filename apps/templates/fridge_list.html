@@ -78,10 +78,21 @@
         <button type="submit">🗑️ 削除</button>
 
     </form>
+    
 
 </div>
 
 {% endfor %}
+
+<hr>
+
+<form action="/fridge/recipe" method="GET">
+    <button type="submit">
+        🍳 期限が近い食材でレシピ生成
+    </button>
+</form>
+
+<br>
 
 <a href="/home">
     <button>🏠 ホームへ戻る</button>

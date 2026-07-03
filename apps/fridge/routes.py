@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect
 from flask_login import login_required, current_user
 from apps.auth.h2db import get_connection
 from datetime import datetime, date
+from apps.gemini.service import generate_recipe
 
 fridge_bp = Blueprint("fridge", __name__, url_prefix="/fridge")
 
@@ -13,23 +14,22 @@ def list_items():
     cur = conn.cursor()
 
     cur.execute("""
-    SELECT
-        ID,
-        NAME,
-        QUANTITY,
-        UNIT,
-        EXPIRY_DATE,
-        BEST_BEFORE_DATE
-    FROM FRIDGE_ITEMS
-    WHERE USER_ID = ?
-    ORDER BY EXPIRY_DATE ASC
+        SELECT
+            ID,
+            NAME,
+            QUANTITY,
+            UNIT,
+            EXPIRY_DATE,
+            BEST_BEFORE_DATE
+        FROM FRIDGE_ITEMS
+        WHERE USER_ID = ?
+        ORDER BY EXPIRY_DATE ASC
     """, (current_user.id,))
 
     rows = cur.fetchall()
     conn.close()
 
     today = date.today()
-
     items = []
 
     for r in rows:
@@ -78,7 +78,99 @@ def list_items():
         "fridge_list.html",
         items=items
     )
+    
+@fridge_bp.route("/recipe")
+@login_required
+def fridge_recipe():
 
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT
+            NAME,
+            EXPIRY_DATE,
+            BEST_BEFORE_DATE
+        FROM FRIDGE_ITEMS
+        WHERE USER_ID = ?
+    """, (current_user.id,))
+
+    rows = cur.fetchall()
+    conn.close()
+
+    today = date.today()
+    foods = []
+
+    for row in rows:
+
+        name = row[0]
+        expiry_date = row[1]
+        best_before_date = row[2]
+
+        use_food = True
+
+        # 消費期限切れなら使用しない
+        if expiry_date:
+            expiry = datetime.strptime(
+                str(expiry_date),
+                "%Y-%m-%d"
+            ).date()
+
+            if expiry < today:
+                use_food = False
+
+        # 賞味期限切れなら使用しない
+        if best_before_date:
+            best_before = datetime.strptime(
+                str(best_before_date),
+                "%Y-%m-%d"
+            ).date()
+
+            if best_before < today:
+                use_food = False
+
+        if use_food:
+            foods.append(name)
+
+    try:
+        if foods:
+            recipe = generate_recipe(foods)
+        else:
+            recipe = "使用できる食材がありません。"
+
+    except Exception:
+        recipe = (
+            "現在レシピ生成サービスが混雑しています。"
+            "時間をおいて再度お試しください。"
+        )
+
+    return render_template(
+        "fridge_recipe.html",
+        foods=foods,
+        recipe=recipe
+    )
+    
+@fridge_bp.route("/delete/<int:item_id>", methods=["POST"])
+
+@login_required
+def delete_item(item_id):
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        DELETE FROM FRIDGE_ITEMS
+        WHERE ID = ?
+        AND USER_ID = ?
+    """, (
+        item_id,
+        current_user.id
+    ))
+
+    conn.commit()
+    conn.close()
+
+    return redirect("/fridge/list")
 
 @fridge_bp.route("/add", methods=["POST"])
 @login_required
@@ -88,7 +180,6 @@ def add_item():
     quantity = request.form.get("quantity")
     unit = request.form.get("unit")
 
-    # 空文字なら None にする
     best_before_date = request.form.get("best_before_date") or None
     expiry_date = request.form.get("expiry_date") or None
 
@@ -114,24 +205,6 @@ def add_item():
         expiry_date,
         best_before_date
     ))
-
-    conn.commit()
-    conn.close()
-
-    return redirect("/fridge/list")
-
-@fridge_bp.route("/delete/<int:item_id>", methods=["POST"])
-@login_required
-def delete_item(item_id):
-
-    conn = get_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        DELETE FROM FRIDGE_ITEMS
-        WHERE ID = ?
-        AND USER_ID = ?
-    """, (item_id, current_user.id))
 
     conn.commit()
     conn.close()

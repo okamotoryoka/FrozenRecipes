@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 import os
@@ -27,16 +27,16 @@ def generate():
             path = os.path.join(UPLOAD_FOLDER, filename)
             file.save(path)
 
-            # ① 食材抽出
+            # 食材抽出
             foods = detect_foods(path)
 
-            # ② レシピ生成
+            # レシピ生成
             recipe_text = generate_recipe(foods)
 
-            # ③ タイトル生成
+            # タイトル生成
             title = f"{foods[0] if foods else 'レシピ'}の料理"
 
-            # ④ 保存
+            # DB保存
             conn = get_connection()
             cur = conn.cursor()
 
@@ -59,6 +59,7 @@ def generate():
             recipe = recipe_text
 
     return render_template("recipe.html", recipe=recipe, foods=foods)
+
 
 @recipe_bp.route("/list")
 @login_required
@@ -87,3 +88,39 @@ def list_recipes():
     ]
 
     return render_template("recipe_list.html", recipes=recipes)
+
+
+# 追加する削除機能
+@recipe_bp.route("/delete/<int:recipe_id>", methods=["POST"])
+@login_required
+def delete_recipe(recipe_id):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    # 画像パス取得
+    cur.execute("""
+        SELECT IMAGE_PATH
+        FROM RECIPES
+        WHERE ID = ? AND USER_ID = ?
+    """, (recipe_id, current_user.id))
+
+    row = cur.fetchone()
+
+    if row:
+        image_path = row[0]
+
+        # 画像削除
+        if image_path and os.path.exists(image_path):
+            os.remove(image_path)
+
+        # レシピ削除
+        cur.execute("""
+            DELETE FROM RECIPES
+            WHERE ID = ? AND USER_ID = ?
+        """, (recipe_id, current_user.id))
+
+        conn.commit()
+
+    conn.close()
+
+    return redirect("/recipe/list")

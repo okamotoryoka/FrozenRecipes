@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, render_template
+from flask import Blueprint, redirect, render_template, flash
 from flask_login import login_required, current_user
 from apps.auth.h2db import get_connection
 
@@ -22,9 +22,51 @@ def delete_favorite(recipe_id):
     ))
 
     conn.commit()
+    
+    flash("🗑️お気に入りから削除しました", "success")
     conn.close()
 
     return redirect("/favorite/list")
+
+@favorite_bp.route("/add/<int:recipe_id>", methods=["POST"])
+@login_required
+def add_favorite(recipe_id):
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    # 重複登録防止
+    cur.execute("""
+        SELECT *
+        FROM FAVORITES
+        WHERE USER_ID = ?
+        AND RECIPE_ID = ?
+    """, (
+        current_user.id,
+        recipe_id
+    ))
+
+    exists = cur.fetchone()
+
+    if not exists:
+        cur.execute("""
+            INSERT INTO FAVORITES (USER_ID, RECIPE_ID)
+            VALUES (?, ?)
+        """, (
+            current_user.id,
+            recipe_id
+        ))
+
+        conn.commit()
+        
+        flash("🔔お気に入りに登録しました", "success")
+        
+    else:
+        flash("⚠️このレシピはすでにお気に入りに登録されています", "info")
+
+    conn.close()
+
+    return redirect("/recipe/list")
 
 
 @favorite_bp.route("/list")
