@@ -1,0 +1,30 @@
+{% comment %} <h1>冷蔵庫管理</h1>
+
+<form
+action="/fridge/upload"
+method="POST"
+enctype="multipart/form-data">
+
+    <input
+    type="file"
+    name="image">
+
+    <button type="submit">
+        アップロード
+    </button>
+
+</form>
+
+<h2>登録食材</h2>
+
+<ul>
+{% for item in ingredients %}
+    <li>
+        {{ item.name }}
+    </li>
+{% endfor %}
+</ul>
+
+<a href="/recipe/generate">
+    レシピを生成
+</a> {% endcomment %}

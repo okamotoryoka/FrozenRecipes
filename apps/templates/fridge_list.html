@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}冷蔵庫管理{% endblock %}
+
+{% block content %}
+
+<h1>賞味・消費期限管理</h1>
+
+<form method="POST" action="/fridge/add">
+
+    <p>
+        食材名：
+        <input type="text" name="name" required>
+    </p>
+
+    <p>
+        数量：
+        <input type="number" name="quantity">
+    </p>
+
+    <p>
+        単位：
+        <input type="text" name="unit">
+    </p>
+
+    <p>
+        賞味期限：
+        <input type="date" name="best_before_date">
+    </p>
+
+    <p>
+        消費期限：
+        <input type="date" name="expiry_date">
+    </p>
+
+    <button type="submit">登録</button>
+
+</form>
+
+<hr>
+
+<h2>登録済み食材</h2>
+
+{% for item in items %}
+
+<div style="border:1px solid #ccc; margin:10px; padding:10px;">
+
+    <p>食材名：{{ item.name }}</p>
+
+    {% if item.expiry_alert %}
+<p style="color:red; font-weight:bold;">
+    {{ item.expiry_alert }}
+</p>
+{% endif %}
+
+{% if item.best_before_alert %}
+<p style="color:orange; font-weight:bold;">
+    {{ item.best_before_alert }}
+</p>
+{% endif %}
+
+    <p>数量：{{ item.quantity }} {{ item.unit }}</p>
+
+    <p>
+        賞味期限：
+        {{ item.best_before_date if item.best_before_date else "未登録" }}
+    </p>
+
+    <p>
+        消費期限：
+        {{ item.expiry_date if item.expiry_date else "未登録" }}
+    </p>
+
+    <form method="POST"
+          action="/fridge/delete/{{ item.id }}"
+          onsubmit="return confirm('削除しますか？');">
+
+        <button type="submit">🗑️ 削除</button>
+
+    </form>
+
+</div>
+
+{% endfor %}
+
+<a href="/home">
+    <button>🏠 ホームへ戻る</button>
+</a>
+
+{% endblock %}

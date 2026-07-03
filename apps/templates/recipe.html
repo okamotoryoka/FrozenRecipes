@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2 class="menu-title">🍳 レシピ生成</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    <input type="file" name="image">
+    <button type="submit">レシピ生成</button>
+</form>
+
+{% if foods %}
+<h3>検出食材</h3>
+<ul>
+    {% for food in foods %}
+        <li>{{ food }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if recipe %}
+<hr>
+<pre>{{ recipe }}</pre>
+{% endif %}
+
+<hr>
+
+<a href="/home">
+    <button>🏠 ホームへ戻る</button>
+</a>
+
+{% endblock %}
+</head>
+<body>
+
+<h1>画像からレシピ生成</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    <input type="file" name="image">
+    <button type="submit">レシピ生成</button>
+</form>
+
+{% if foods %}
+<h3>検出食材</h3>
+<ul>
+    {% for food in foods %}
+        <li>{{ food }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% if recipe %}
+<hr>
+<pre>{{ recipe }}</pre>
+{% endif %}
+
+<hr>
+
+<a href="/home">
+    <button>🏠 ホームへ戻る</button>
+</a>
+
+</body>
+</html>

@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}レシピ一覧{% endblock %}
+
+{% block content %}
+
+<h1>レシピ一覧</h1>
+
+{% if recipes %}
+
+    {% for r in recipes %}
+
+    <div class="recipe-card">
+
+    <h3>{{ r.title }}</h3>
+
+    <div class="recipe-text">
+        {{ r.text }}
+    </div>
+
+    <form method="POST" action="/favorite/add/{{ r.id }}">
+        <button type="submit">❤️ お気に入り</button>
+    </form>
+    
+
+</div>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>まだレシピがありません。</p>
+
+{% endif %}
+
+<hr>
+
+<a href="/home">
+    <button>🏠 ホームへ戻る</button>
+</a>
+
+<style>
+.recipe-card{
+    border:1px solid #ddd;
+    border-radius:10px;
+    padding:15px;
+    margin-bottom:15px;
+    background:#fff;
+    box-shadow:0 2px 5px rgba(0,0,0,0.1);
+}
+
+.recipe-card h3{
+    margin-top:0;
+    color:#333;
+}
+
+.recipe-text{
+    white-space:pre-wrap;     /* 改行を保持 */
+    word-wrap:break-word;     /* 長文を折り返す */
+    line-height:1.8;
+    background:#f8f8f8;
+    padding:10px;
+    border-radius:8px;
+    margin-bottom:10px;
+    max-height:300px;         /* 高すぎる場合スクロール */
+    overflow-y:auto;
+}
+</style>
+
+{% endblock %}

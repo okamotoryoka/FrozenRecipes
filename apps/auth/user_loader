@@ -1,0 +1,23 @@
+from apps.auth.h2db import get_connection
+from apps.auth.login_user import LoginUser
+from flask_login import LoginManager
+
+login_manager = LoginManager()
+
+@login_manager.user_loader
+def load_user(user_id):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute(
+        "SELECT ID, USERNAME FROM USERS WHERE ID = ?",
+        (user_id,)
+    )
+
+    row = cur.fetchone()
+    conn.close()
+
+    if row:
+        return LoginUser(row[0], row[1])
+
+    return None

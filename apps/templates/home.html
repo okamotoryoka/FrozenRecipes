@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2 class="menu-title">🧊 メニュー</h2>
+
+<div class="menu-grid">
+
+    <a href="/recipe/generate" class="menu-card">
+        <div class="icon">🍳</div>
+        <div>画像から<br>レシピ生成</div>
+    </a>
+
+    <a href="/recipe/list" class="menu-card">
+        <div class="icon">📋</div>
+        <div>レシピ一覧</div>
+    </a>
+
+    <a href="/fridge/list" class="menu-card">
+        <div class="icon">🥶</div>
+        <div>冷蔵庫管理</div>
+    </a>
+
+    <a href="/favorite/list" class="menu-card">
+        <div class="icon">❤️</div>
+        <div>お気に入り</div>
+    </a>
+
+</div>
+
+{% endblock %}

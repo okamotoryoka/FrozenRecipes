@@ -1,0 +1,149 @@
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}
+        冷蔵庫レシピ管理
+        {% endblock %}
+    </title>
+
+    <style>
+
+        body{
+    font-family: "Yu Gothic", sans-serif;
+    margin: 0;
+    background: #f4f7fb;
+}
+
+header{
+    background: linear-gradient(135deg, #4CAF50, #66bb6a);
+    color: white;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+header h1{
+    margin: 0;
+    font-size: 28px;
+}
+
+nav{
+    margin-top: 15px;
+}
+
+nav a{
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    margin-right: 10px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+nav a:hover{
+    background: rgba(255,255,255,0.2);
+}
+
+.container{
+    width: 85%;
+    max-width: 1000px;
+    margin: 30px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.flash{
+    background: #ffeaea;
+    color: #d32f2f;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.menu-title{
+    text-align:center;
+    font-size:28px;
+    color:#4CAF50;
+    margin-bottom:20px;
+}
+
+.menu-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:20px;
+}
+
+.menu-card{
+    background:white;
+    border-radius:20px;
+    padding:25px;
+    text-align:center;
+    text-decoration:none;
+    color:#333;
+    font-weight:bold;
+    box-shadow:0 4px 12px rgba(0,0,0,0.1);
+    transition:0.3s;
+    border:3px solid #dff5e1;
+}
+
+.menu-card:hover{
+    transform:translateY(-5px);
+    background:#f5fff7;
+}
+
+.icon{
+    font-size:40px;
+    margin-bottom:10px;
+}
+
+    </style>
+
+</head>
+<body>
+
+<header>
+
+    <h1>冷蔵庫レシピ管理システム</h1>
+
+    <nav>
+        <a href="/home">🏠 ホーム</a>
+
+        <a href="/recipe/generate">🍳 レシピ生成</a>
+
+        <a href="/recipe/list">📋 レシピ一覧</a>
+
+        <a href="/fridge/list">🥶 冷蔵庫管理</a>
+
+        <a href="/favorite/list">❤️ お気に入り</a>
+    </nav>
+
+</header>
+
+<div class="container">
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="flash">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}
+    {% endblock %}
+
+</div>
+
+</body>
+</html>
