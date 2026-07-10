@@ -68,11 +68,24 @@ def list_recipes():
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT ID, TITLE, RECIPE_TEXT, IMAGE_PATH
-        FROM RECIPES
-        WHERE USER_ID = ?
-        ORDER BY ID DESC
-    """, (current_user.id,))
+    SELECT ID, TITLE, RECIPE_TEXT, IMAGE_PATH
+    FROM RECIPES
+    WHERE USER_ID = ?
+
+    UNION
+
+    SELECT
+        r.ID,
+        r.TITLE,
+        r.RECIPE_TEXT,
+        r.IMAGE_PATH
+    FROM BOOKMARKS b
+    JOIN POSTS p ON b.POST_ID = p.ID
+    JOIN RECIPES r ON p.RECIPE_ID = r.ID
+    WHERE b.USER_ID = ?
+
+    ORDER BY ID DESC
+""", (current_user.id, current_user.id))
 
     rows = cur.fetchall()
     conn.close()

@@ -1,29 +1,86 @@
+<style>
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.menu-card {
+    display: block;
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    text-decoration: none;
+    color: #333;
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+    transition: .2s;
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+    background: #f5fff7;
+}
+
+.menu-card .icon {
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+
+.menu-card h3 {
+    margin: 10px 0;
+}
+
+.menu-card p {
+    color: gray;
+    font-size: 14px;
+}
+
+</style>
+
 {% extends "base.html" %}
 
 {% block content %}
 
-<h2 class="menu-title">🧊 メニュー</h2>
+<h2 class="menu-title">メニュー</h2>
 
 <div class="menu-grid">
 
     <a href="/recipe/generate" class="menu-card">
         <div class="icon">🍳</div>
-        <div>画像から<br>レシピ生成</div>
+        <h3>レシピ生成</h3>
+        <p>AIがレシピを作成します</p>
     </a>
 
     <a href="/recipe/list" class="menu-card">
         <div class="icon">📋</div>
-        <div>レシピ一覧</div>
+        <h3>レシピ一覧</h3>
+        <p>作成したレシピを確認</p>
     </a>
 
     <a href="/fridge/list" class="menu-card">
         <div class="icon">🥶</div>
-        <div>冷蔵庫管理</div>
+        <h3>冷蔵庫管理</h3>
+        <p>食材を管理します</p>
     </a>
 
     <a href="/favorite/list" class="menu-card">
         <div class="icon">❤️</div>
-        <div>お気に入り</div>
+        <h3>お気に入り</h3>
+        <p>お気に入りのレシピ</p>
+    </a>
+
+    <a href="/sns/" class="menu-card">
+        <div class="icon">📱</div>
+        <h3>SNS</h3>
+        <p>投稿を見たり共有できます</p>
+    </a>
+
+    <a href="/sns/bookmarks" class="menu-card">
+        <div class="icon">🔖</div>
+        <h3>保存した投稿</h3>
+        <p>あとで見返したい投稿</p>
     </a>
 
 </div>

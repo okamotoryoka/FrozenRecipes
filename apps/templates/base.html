@@ -124,6 +124,17 @@ nav a:hover{
     color:#0c5460;
     border:1px solid #bee5eb;
 }
+
+.logout-btn {
+    background-color: #ff8a80;
+    color: white !important;
+    border-radius: 20px;
+    padding: 10px 16px;
+}
+
+.logout-btn:hover {
+    background-color: #ff6f61;
+}
 </style>
 
     </style>
@@ -145,6 +156,12 @@ nav a:hover{
         <a href="/fridge/list">🥶 冷蔵庫管理</a>
 
         <a href="/favorite/list">❤️ お気に入り</a>
+
+        <a href="/sns/">📱 SNS</a>
+
+        <a href="{{ url_for('sns.bookmarks') }}">🔖保存した投稿</a>
+
+        <a href="{{ url_for('auth.logout') }}" class="logout-btn">🚪 ログアウト</a>
     </nav>
 
 </header>

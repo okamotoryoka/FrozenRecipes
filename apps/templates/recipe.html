@@ -1,64 +1,167 @@
 {% extends "base.html" %}
 
+{% block title %}レシピ生成{% endblock %}
+
 {% block content %}
+
+<style>
+
+.recipe-box{
+    max-width:700px;
+    margin:0 auto;
+}
+
+.upload-card{
+    background:white;
+    border:5px double #b8e0a5;
+    border-radius:25px;
+    padding:30px;
+    text-align:center;
+    box-shadow:0 8px 20px rgba(168,214,165,.25);
+}
+
+.upload-card p{
+    color:#666;
+    margin-bottom:25px;
+    line-height:1.8;
+}
+
+.file-input{
+    width:100%;
+    margin-bottom:20px;
+}
+
+.generate-btn{
+    background:#8fd694;
+    color:white;
+    border:none;
+    padding:12px 30px;
+    border-radius:30px;
+    font-size:17px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.generate-btn:hover{
+    background:#74c97b;
+}
+
+.result-card{
+    background:white;
+    border:4px solid #dff3d8;
+    border-radius:20px;
+    padding:20px;
+    margin-top:30px;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+.result-title{
+    color:#4CAF50;
+    font-size:22px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+.food-list{
+    padding-left:20px;
+}
+
+.food-list li{
+    margin:8px 0;
+    font-size:16px;
+}
+
+.recipe-text{
+    white-space:pre-wrap;
+    line-height:1.8;
+    background:#f8fff5;
+    border-radius:15px;
+    padding:15px;
+    border:2px solid #b8e0a5;
+}
+
+.home-btn{
+    margin-top:30px;
+    background:#8fd694;
+    color:white;
+    border:none;
+    padding:12px 28px;
+    border-radius:30px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+.home-btn:hover{
+    background:#74c97b;
+}
+
+</style>
+
+<div class="recipe-box">
 
 <h2 class="menu-title">🍳 レシピ生成</h2>
 
-<form method="POST" enctype="multipart/form-data">
-    <input type="file" name="image">
-    <button type="submit">レシピ生成</button>
-</form>
+<div class="upload-card">
+
+    <h3>📷 画像をアップロード</h3>
+
+    <p>
+        冷蔵庫の食材や残り物の写真をアップロードすると、
+        AIがおすすめレシピを生成します😊
+    </p>
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <input class="file-input" type="file" name="image">
+
+        <br>
+
+        <button class="generate-btn" type="submit">
+            🍳 レシピ生成
+        </button>
+
+    </form>
+
+</div>
 
 {% if foods %}
-<h3>検出食材</h3>
-<ul>
-    {% for food in foods %}
+<div class="result-card">
+
+    <div class="result-title">
+        🥕 検出された食材
+    </div>
+
+    <ul class="food-list">
+        {% for food in foods %}
         <li>{{ food }}</li>
-    {% endfor %}
-</ul>
+        {% endfor %}
+    </ul>
+
+</div>
 {% endif %}
 
 {% if recipe %}
-<hr>
-<pre>{{ recipe }}</pre>
+<div class="result-card">
+
+    <div class="result-title">
+        🍽️ おすすめレシピ
+    </div>
+
+    <div class="recipe-text">
+{{ recipe }}
+    </div>
+
+</div>
 {% endif %}
 
-<hr>
+<div style="text-align:center;">
+    <a href="/home">
+        <button class="home-btn">
+            🏠 ホームへ戻る
+        </button>
+    </a>
+</div>
 
-<a href="/home">
-    <button>🏠 ホームへ戻る</button>
-</a>
+</div>
 
 {% endblock %}
-</head>
-<body>
-
-<h1>画像からレシピ生成</h1>
-
-<form method="POST" enctype="multipart/form-data">
-    <input type="file" name="image">
-    <button type="submit">レシピ生成</button>
-</form>
-
-{% if foods %}
-<h3>検出食材</h3>
-<ul>
-    {% for food in foods %}
-        <li>{{ food }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
-
-{% if recipe %}
-<hr>
-<pre>{{ recipe }}</pre>
-{% endif %}
-
-<hr>
-
-<a href="/home">
-    <button>🏠 ホームへ戻る</button>
-</a>
-
-</body>
-</html>

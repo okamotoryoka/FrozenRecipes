@@ -4,73 +4,163 @@
 
 {% block content %}
 
-<h1>レシピ一覧</h1>
+<style>
+
+body{
+    background:#fffdf8;
+}
+
+.recipe-list{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(400px,1fr));
+    gap:25px;
+    margin-top:30px;
+}
+
+.recipe-card{
+    background:#fffefb;
+    border-radius:25px;
+    border:3px solid #f3dfc1;
+    padding:22px;
+    box-shadow:0 8px 18px rgba(0,0,0,.08);
+    transition:.25s;
+}
+
+.recipe-card:hover{
+    transform:translateY(-5px);
+}
+
+.recipe-card h3{
+    margin-top:0;
+    color:#8b5e3c;
+    font-size:23px;
+    border-bottom:2px dashed #edd3ae;
+    padding-bottom:10px;
+}
+
+.recipe-text{
+    margin-top:15px;
+    white-space:pre-wrap;
+    line-height:1.9;
+    background:#fff8ef;
+    border-radius:15px;
+    padding:15px;
+    color:#555;
+    max-height:250px;
+    overflow-y:auto;
+}
+
+.button-area{
+    display:flex;
+    gap:10px;
+    margin-top:18px;
+}
+
+.favorite-btn{
+    flex:1;
+    background:#ffb6b9;
+    color:white;
+    border:none;
+    border-radius:30px;
+    padding:10px;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.favorite-btn:hover{
+    background:#ff9aa2;
+}
+
+.delete-btn{
+    flex:1;
+    background:#d8c3a5;
+    color:white;
+    border:none;
+    border-radius:30px;
+    padding:10px;
+    cursor:pointer;
+    font-size:15px;
+}
+
+.delete-btn:hover{
+    background:#c8ae88;
+}
+
+.empty{
+    text-align:center;
+    font-size:18px;
+    color:#888;
+    margin:50px;
+}
+
+.home-btn{
+    margin-top:40px;
+    background:#9acb84;
+    color:white;
+    border:none;
+    border-radius:30px;
+    padding:12px 28px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.home-btn:hover{
+    background:#7eb96c;
+}
+
+</style>
+
+<h2 class="menu-title">📖 レシピ一覧</h2>
 
 {% if recipes %}
 
-    {% for r in recipes %}
+<div class="recipe-list">
 
-    <div class="recipe-card">
+{% for r in recipes %}
 
-    <h3>{{ r.title }}</h3>
+<div class="recipe-card">
+
+    <h3>🍳 {{ r.title }}</h3>
 
     <div class="recipe-text">
         {{ r.text }}
     </div>
 
-    <form method="POST" action="/favorite/add/{{ r.id }}">
-        <button type="submit">❤️ お気に入り</button>
-    </form>
-    
-    <form method="POST" action="/recipe/delete/{{ r.id }}">
-    <button type="submit"
-            onclick="return confirm('このレシピを削除しますか？')">
-        🗑️ 削除
-    </button>
-</form>
+    <div class="button-area">
+
+        <form method="POST" action="/favorite/add/{{ r.id }}">
+            <button class="favorite-btn" type="submit">
+                ❤️ お気に入り
+            </button>
+        </form>
+
+        <form method="POST" action="/recipe/delete/{{ r.id }}">
+            <button class="delete-btn"
+                    type="submit"
+                    onclick="return confirm('このレシピを削除しますか？')">
+                🗑️ 削除
+            </button>
+        </form>
+
+    </div>
 
 </div>
 
-    {% endfor %}
+{% endfor %}
+
+</div>
 
 {% else %}
 
-    <p>まだレシピがありません。</p>
+<p class="empty">📭 レシピはまだありません</p>
 
 {% endif %}
 
-<hr>
-
-<a href="/home">
-    <button>🏠 ホームへ戻る</button>
-</a>
-
-<style>
-.recipe-card{
-    border:1px solid #ddd;
-    border-radius:10px;
-    padding:15px;
-    margin-bottom:15px;
-    background:#fff;
-    box-shadow:0 2px 5px rgba(0,0,0,0.1);
-}
-
-.recipe-card h3{
-    margin-top:0;
-    color:#333;
-}
-
-.recipe-text{
-    white-space:pre-wrap;     /* 改行を保持 */
-    word-wrap:break-word;     /* 長文を折り返す */
-    line-height:1.8;
-    background:#f8f8f8;
-    padding:10px;
-    border-radius:8px;
-    margin-bottom:10px;
-    max-height:300px;         /* 高すぎる場合スクロール */
-    overflow-y:auto;
-}
-</style>
-
+<div style="text-align:center;">
+    <a href="/home">
+        <button class="home-btn">
+            🏠 ホームへ戻る
+        </button>
+    </a>
+</div>
 {% endblock %}

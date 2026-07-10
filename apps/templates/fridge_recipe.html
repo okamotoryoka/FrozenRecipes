@@ -4,29 +4,141 @@
 
 {% block content %}
 
-<h1>🍳 残り物食材レシピ</h1>
+<style>
+
+/* 背景 */
+body{
+    background:linear-gradient(to bottom,#fff8e7,#ffffff);
+}
+
+
+/* タイトル */
+.page-title{
+    text-align:center;
+    color:#f28c28;
+    font-size:32px;
+    margin-bottom:30px;
+}
+
+
+/* 全体カード */
+.recipe-container{
+    max-width:700px;
+    margin:auto;
+}
+
+
+/* 食材カード */
+.food-box{
+    background:#fffdf5;
+    border:3px solid #ffd180;
+    border-radius:25px;
+    padding:25px;
+    margin-bottom:25px;
+    box-shadow:0 10px 25px rgba(255,152,0,.15);
+}
+
+
+/* 食材タイトル */
+.food-box h3{
+    color:#ef8c00;
+    margin-top:0;
+}
+
+
+/* 食材リスト */
+.food-box ul{
+    list-style:none;
+    padding:0;
+}
+
+.food-box li{
+    background:#fff3cd;
+    border-radius:20px;
+    padding:8px 15px;
+    margin:8px 0;
+    color:#795548;
+    font-weight:bold;
+}
+
+
+/* レシピ表示 */
+.recipe-card{
+    background:linear-gradient(to bottom,#ffffff,#fff8e1);
+    border:3px solid #ffcc80;
+    border-radius:25px;
+    padding:25px;
+    line-height:1.8;
+    white-space:pre-wrap;
+    color:#555;
+    box-shadow:0 10px 25px rgba(255,152,0,.18);
+}
+
+
+/* 戻るボタン */
+.back-btn{
+    background:#ffb74d;
+    color:white;
+    border:none;
+    border-radius:30px;
+    padding:12px 28px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.back-btn:hover{
+    background:#ffa726;
+}
+
+
+/* ボタン配置 */
+.button-area{
+    text-align:center;
+    margin-top:35px;
+}
+
+
+</style>
+
+<h1 class="page-title">🍳 残り物食材レシピ</h1>
+
+<div class="recipe-container">
 
 {% if foods %}
-    <h3>使用する食材</h3>
 
-    <ul>
-        {% for food in foods %}
-            <li>{{ food }}</li>
-        {% endfor %}
-    </ul>
+<div class="food-box">
 
-    <div class="recipe-card">
-        {{ recipe }}
-    </div>
+<h3>🥕 使用する食材</h3>
+
+<ul>
+{% for food in foods %}
+<li>🍴 {{ food }}</li>
+{% endfor %}
+</ul>
+
+</div>
+
+
+<div class="recipe-card">
+{{ recipe }}
+</div>
 
 {% else %}
-    <p>期限が近い食材はありません。</p>
+
+<p>期限が近い食材はありません。</p>
+
 {% endif %}
 
-<br>
+</div>
+
+<div class="button-area">
 
 <a href="/fridge/list">
-    <button>← 冷蔵庫一覧へ戻る</button>
+<button class="back-btn">
+← 冷蔵庫一覧へ戻る
+</button>
 </a>
+
+</div>
 
 {% endblock %}

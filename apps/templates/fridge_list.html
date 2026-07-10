@@ -4,98 +4,492 @@
 
 {% block content %}
 
-<h1>賞味・消費期限管理</h1>
+<style>
+
+body{
+    background:linear-gradient(to bottom,#eef8ff,#ffffff);
+}
+
+
+/* タイトル */
+.page-title{
+    text-align:center;
+    color:#3f8fd2;
+    font-size:32px;
+    margin-bottom:30px;
+}
+
+
+/* 入力カード */
+.form-card{
+    max-width:700px;
+    margin:auto;
+    background:#ffffff;
+    border:3px solid #9fd3f7;
+    border-radius:25px;
+    padding:30px;
+    box-shadow:0 10px 25px rgba(70,150,220,.18);
+}
+
+
+/* 入力欄 */
+.form-group{
+    margin-bottom:18px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:6px;
+    font-weight:bold;
+    color:#4682b4;
+}
+
+.form-group input{
+    width:100%;
+    padding:10px;
+    border:2px solid #d6ebfa;
+    border-radius:12px;
+    box-sizing:border-box;
+}
+
+.form-group input:focus{
+    outline:none;
+    border-color:#7dc7ff;
+}
+
+.form-group select{
+    width:100%;
+    padding:10px;
+    border:2px solid #d6ebfa;
+    border-radius:12px;
+    background:white;
+    box-sizing:border-box;
+    font-size:15px;
+    color:#555;
+}
+
+.form-group select:focus{
+    outline:none;
+    border-color:#7dc7ff;
+}
+
+/* 登録ボタン */
+.add-btn{
+    width:100%;
+    background:#63b3ed;
+    color:white;
+    border:none;
+    padding:14px;
+    border-radius:30px;
+    font-size:17px;
+    cursor:pointer;
+}
+
+.add-btn:hover{
+    background:#4aa3e0;
+}
+
+
+/* 食材一覧 */
+.food-list{
+    margin-top:40px;
+    display:grid;
+    gap:20px;
+    max-width:700px;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+
+/* 食材カード */
+.food-card{
+    background:linear-gradient(to bottom,#ffffff,#f3faff);
+    border:3px solid #9fd3f7;
+    border-radius:25px;
+    padding:25px;
+    box-shadow:0 10px 25px rgba(70,150,220,.18);
+    transition:.3s;
+}
+
+.food-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 15px 30px rgba(70,150,220,.25);
+}
+
+
+/* 食材名 */
+.food-card h3{
+    margin:0 0 15px;
+    color:#3f8fd2;
+    font-size:24px;
+    border-bottom:2px dashed #b9dcf8;
+    padding-bottom:10px;
+}
+
+
+/* 数量 */
+.quantity-box{
+    display:inline-block;
+    background:#e3f2fd;
+    color:#1976d2;
+    padding:8px 15px;
+    border-radius:20px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+
+/* 日付 */
+.date-box{
+    background:white;
+    border-radius:15px;
+    padding:12px 15px;
+    margin:10px 0;
+    border-left:5px solid #90caf9;
+    color:#555;
+}
+
+
+/* アラート */
+.expiry{
+    background:#ffebee;
+    border-radius:15px;
+    padding:10px 15px;
+    color:#e53935;
+    font-weight:bold;
+}
+
+.bestbefore{
+    background:#fff3e0;
+    border-radius:15px;
+    padding:10px 15px;
+    color:#fb8c00;
+    font-weight:bold;
+}
+
+
+/* 削除ボタン */
+.delete-btn{
+    background:#ff8a80;
+    color:white;
+    border:none;
+    border-radius:20px;
+    padding:10px 20px;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+.delete-btn:hover{
+    background:#ef5350;
+}
+
+
+/* レシピボタン */
+.recipe-btn{
+    background:#4db6ac;
+    color:white;
+    border:none;
+    border-radius:30px;
+    padding:14px 28px;
+    font-size:17px;
+    cursor:pointer;
+}
+
+.recipe-btn:hover{
+    background:#26a69a;
+}
+
+
+/* ホームボタン */
+.home-btn{
+    background:#64b5f6;
+    color:white;
+    border:none;
+    border-radius:30px;
+    padding:12px 28px;
+    font-size:17px;
+    cursor:pointer;
+}
+
+.home-btn:hover{
+    background:#42a5f5;
+}
+
+
+/* ボタン配置 */
+.button-area{
+    text-align:center;
+    margin-top:35px;
+}
+
+/* セレクト全体 */
+.unit-select-area {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+
+/* セレクトボックス */
+.unit-select-area select {
+    width: 180px;
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 2px solid #b8dff8;
+    background-color: #ffffff;
+    color: #555;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+
+/* ホバー */
+.unit-select-area select:hover {
+    border-color: #6fb6e8;
+}
+
+
+/* フォーカス */
+.unit-select-area select:focus {
+    outline: none;
+    border-color: #3f8fd2;
+    box-shadow: 0 0 5px rgba(63,143,210,0.3);
+}
+
+
+/* 矢印周り */
+.unit-select-area option {
+    padding: 10px;
+}
+
+
+/* スマホ対応 */
+@media(max-width:600px){
+
+    .unit-select-area{
+        flex-direction: column;
+    }
+
+    .unit-select-area select{
+        width:100%;
+    }
+
+}
+
+</style>
+
+<div class="form-card">
 
 <form method="POST" action="/fridge/add">
 
-    <p>
-        食材名：
-        <input type="text" name="name" required>
-    </p>
+<div class="form-group">
+    <label>🥬 食材名</label>
+    <input type="text" name="name" placeholder="例：にんじん、牛乳、卵">
+</div>
 
-    <p>
-        数量：
-        <input type="number" name="quantity">
-    </p>
 
-    <p>
-        単位：
-        <input type="text" name="unit">
-    </p>
+<div class="form-group">
+    <label>🔢 数量</label>
+    <input type="number" name="quantity" placeholder="例：3" min="1">
+</div>
 
-    <p>
-        賞味期限：
-        <input type="date" name="best_before_date">
-    </p>
 
-    <p>
-        消費期限：
-        <input type="date" name="expiry_date">
-    </p>
+<div class="form-group">
+    <label>📦 単位</label>
 
-    <button type="submit">登録</button>
+    <div class="unit-select-area">
+
+        <select id="unitGroup">
+            <option value="">🥕 単位の種類を選択</option>
+            <option value="count">🥕 個数で数える</option>
+            <option value="package">📦 容器・包装</option>
+            <option value="weight">⚖️ 重さ・容量</option>
+        </select>
+
+
+        <select name="unit" id="unit">
+            <option value="">単位を選択</option>
+        </select>
+
+    </div>
+</div>
+
+<script>
+
+const units = {
+    count: [
+        "個",
+        "本",
+        "枚",
+        "匹",
+        "房"
+    ],
+
+    package: [
+        "袋",
+        "パック",
+        "缶",
+        "箱"
+    ],
+
+    weight: [
+        "g",
+        "kg",
+        "ml",
+        "L"
+    ]
+};
+
+
+document.getElementById("unitGroup").addEventListener("change", function(){
+
+    const unitSelect = document.getElementById("unit");
+
+    // 初期化
+    unitSelect.innerHTML = '<option value="">単位を選択</option>';
+
+    const type = this.value;
+
+
+    if(units[type]){
+
+        units[type].forEach(function(unit){
+
+            const option = document.createElement("option");
+
+            option.value = unit;
+            option.textContent = unit;
+
+            unitSelect.appendChild(option);
+
+        });
+
+    }
+
+});
+
+</script>
+
+<div class="form-group">
+    <label>📅 賞味期限</label>
+    <input type="date" name="best_before_date">
+</div>
+
+
+<div class="form-group">
+    <label>⏰ 消費期限</label>
+    <input type="date" name="expiry_date">
+</div>
+
+
+<button class="add-btn">
+➕ 登録
+</button>
+
 
 </form>
 
-<hr>
+</div>
 
-<h2>登録済み食材</h2>
+
+
+<h2 class="page-title">🧊 登録済み食材</h2>
+
+
+<div class="food-list">
 
 {% for item in items %}
 
-<div style="border:1px solid #ccc; margin:10px; padding:10px;">
+<div class="food-card">
 
-    <p>食材名：{{ item.name }}</p>
 
-    {% if item.expiry_alert %}
-<p style="color:red; font-weight:bold;">
-    {{ item.expiry_alert }}
+<h3>
+🥬 {{ item.name }}
+</h3>
+
+
+<p class="quantity-box">
+📦 {{ item.quantity }} {{ item.unit }}
+</p>
+
+
+
+<div class="date-box">
+📅 賞味期限：
+{{ item.best_before_date if item.best_before_date else "未登録" }}
+</div>
+
+
+<div class="date-box">
+⏰ 消費期限：
+{{ item.expiry_date if item.expiry_date else "未登録" }}
+</div>
+
+
+
+{% if item.expiry_alert %}
+<p class="expiry">
+🚨 {{ item.expiry_alert }}
 </p>
 {% endif %}
+
+
 
 {% if item.best_before_alert %}
-<p style="color:orange; font-weight:bold;">
-    {{ item.best_before_alert }}
+<p class="bestbefore">
+⚠️ {{ item.best_before_alert }}
 </p>
 {% endif %}
 
-    <p>数量：{{ item.quantity }} {{ item.unit }}</p>
 
-    <p>
-        賞味期限：
-        {{ item.best_before_date if item.best_before_date else "未登録" }}
-    </p>
 
-    <p>
-        消費期限：
-        {{ item.expiry_date if item.expiry_date else "未登録" }}
-    </p>
+<form method="POST"
+      action="/fridge/delete/{{ item.id }}"
+      onsubmit="return confirm('削除しますか？');">
 
-    <form method="POST"
-          action="/fridge/delete/{{ item.id }}"
-          onsubmit="return confirm('削除しますか？');">
+<button class="delete-btn">
+🗑️ 削除
+</button>
 
-        <button type="submit">🗑️ 削除</button>
+</form>
 
-    </form>
-    
 
 </div>
 
 {% endfor %}
 
-<hr>
+</div>
+
+
+
+<div class="button-area">
+
 
 <form action="/fridge/recipe" method="GET">
-    <button type="submit">
-        🍳 期限が近い食材でレシピ生成
-    </button>
+
+<button class="recipe-btn">
+🍳 期限が近い食材でレシピ生成
+</button>
+
 </form>
+
 
 <br>
 
+
 <a href="/home">
-    <button>🏠 ホームへ戻る</button>
+
+<button class="home-btn">
+🏠 ホームへ戻る
+</button>
+
 </a>
+
+
+</div>
+
 
 {% endblock %}

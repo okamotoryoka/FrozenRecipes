@@ -1,0 +1,367 @@
+<style>
+body {
+    background-image: url("{{ url_for('static', filename='uploads/野菜.png') }}");
+    background-repeat: repeat;
+    background-size: 300px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+}
+
+.post {
+    background: #fff;
+    margin: 30px auto;
+    width: 420px;
+    border: 6px double #b8e0a5;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(168, 214, 165, 0.25);
+}
+
+.post:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(168, 214, 165, 0.35);
+}
+
+.post img {
+    width: 100%;
+    display: block;
+    border-bottom: 4px solid #fff5d6;  /* クリーム色 */
+}
+
+.post-content {
+    padding: 10px;
+}
+
+.post-user{
+    font-size:18px;
+    font-weight:bold;
+    color:#4CAF50;
+    margin-bottom:8px;
+}
+
+.post-caption{
+    background:#f8fff5;
+    border:2px solid #b8e0a5;
+    border-radius:15px;
+    padding:12px;
+    color:#555;
+    line-height:1.6;
+}
+
+.actions{
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    padding:12px;
+    border-top:1px solid #eee;
+    border-bottom:1px solid #eee;
+}
+
+.actions a{
+    text-decoration:none;
+    color:#444;
+    font-size:18px;
+    transition:.2s;
+}
+
+.actions a:hover{
+    transform:scale(1.1);
+}
+
+.delete-btn {
+    background-color: #e53935;
+    color: white;
+    border: none;
+    padding: 4px 10px;
+    font-size: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background-color: #c62828;
+}
+
+.side-image {
+    position: fixed;
+    top: 100px;
+    width: 180px;
+    z-index: -1;
+}
+
+/* コメント */
+/* コメント全体 */
+.comment-box{
+    margin-top:15px;
+}
+
+/* コメント */
+/* コメント全体 */
+.comment-box{
+    margin-top:20px;
+}
+
+/* コメント */
+.comment{
+    padding:15px 0;
+    border-bottom:1px solid #e5e5e5;
+}
+
+.comment:last-child{
+    border-bottom:none;
+}
+
+/* ユーザー名 */
+.comment-user{
+    font-weight:bold;
+    color:#4CAF50;
+    margin-bottom:5px;
+    font-size:15px;
+}
+
+/* コメント本文 */
+.comment-text{
+    color:#444;
+    margin-bottom:10px;
+    line-height:1.6;
+}
+
+/* コメント入力 */
+.comment-input{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.comment-input input{
+    flex:1;
+    padding:10px 14px;
+    border:1px solid #ddd;
+    border-radius:20px;
+}
+
+.comment-input button{
+    background:#8fd694;
+    color:white;
+    border:none;
+    padding:8px 18px;
+    border-radius:20px;
+}
+
+/* 返信フォーム */
+.reply-form{
+    display:flex;
+    gap:8px;
+    margin-top:8px;
+}
+
+.reply-form input{
+    flex:1;
+    padding:8px 12px;
+    border:1px solid #ddd;
+    border-radius:20px;
+}
+
+.reply-form button{
+    background:#9fdc8d;
+    color:white;
+    border:none;
+    padding:7px 15px;
+    border-radius:20px;
+}
+
+/* 返信 */
+.reply{
+    margin-top:12px;
+    margin-left:35px;
+    padding:12px;
+    background:#f8fff5;
+    border:2px solid #b8e0a5;
+    border-radius:15px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* 誰への返信 */
+.reply-to{
+    display:inline-block;
+    background:#e8f7df;
+    color:#4CAF50;
+    font-size:12px;
+    font-weight:bold;
+    padding:3px 8px;
+    border-radius:20px;
+    margin-bottom:6px;
+}
+
+/* 返信ユーザー */
+.reply-user{
+    font-weight:bold;
+    color:#5c9b4d;
+    margin-bottom:5px;
+}
+
+/* 本文 */
+.reply-text{
+    color:#555;
+    line-height:1.5;
+}
+
+.home-btn{
+    background:#8fd694;
+    color:white;
+    border:none;
+    border-radius:30px;
+    padding:12px 28px;
+    font-size:16px;
+    cursor:pointer;
+    box-shadow:0 4px 10px rgba(0,0,0,.1);
+}
+
+.home-btn:hover{
+    background:#74c97b;
+}
+
+</style>
+
+<!-- ヘッダー -->
+<div class="header">
+    <div><b>MySNS</b></div>
+    <div>
+        <a href="/home">🏠</a>
+        <a href="/sns/post/create">➕</a>
+    </div>
+</div>
+
+
+<!-- 投稿一覧 -->
+{% for post in posts %}
+<div class="post">
+
+    {% if post[3] %}
+    <img src="{{ url_for('static', filename=post[3]) }}">
+    {% endif %}
+
+    <!-- 投稿内容 -->
+    <div class="post-content">
+
+    <div class="post-user">
+        👤 {{ post[2] }}
+    </div>
+
+    <div class="post-caption">
+        {{ post[4] }}
+    </div>
+
+</div>
+
+    <!-- いいね等 -->
+    <div class="actions">
+        <a href="{{ url_for('sns.like', post_id=post[0]) }}">
+            {% if post[6] %}
+                💖 {{ post[5] }}
+            {% else %}
+                ❤️ {{ post[5] }}
+            {% endif %}
+        </a>
+
+        <a href="/sns/bookmark/{{ post[0] }}">🔖</a>
+
+        {% if post[1] == current_user.id %}
+        <form action="{{ url_for('sns.delete_post', post_id=post[0]) }}" method="POST">
+            <button class="delete-btn">削除</button>
+        </form>
+        {% endif %}
+    </div>
+
+    <!-- コメント -->
+    <div class="post-content">
+
+        <form class="comment-input"
+              action="/sns/comment/{{ post[0] }}"
+              method="POST">
+            <input name="content" placeholder="コメントを書く...">
+            <button type="submit">送信</button>
+        </form>
+
+        <div class="comment-box">
+
+        {% for comment in comments %}
+        {% if comment[1] == post[0] and comment[5] == None %}
+
+            <div class="comment">
+
+                <div class="comment-user">
+                    {{ comment[3] }}
+                </div>
+
+                <div class="comment-text">
+                    {{ comment[4] }}
+                </div>
+
+                <form class="reply-form"
+                      action="{{ url_for('sns.reply', comment_id=comment[0]) }}"
+                      method="POST">
+
+                    <input name="content" placeholder="返信を書く...">
+                    <button type="submit">返信</button>
+
+                </form>
+
+                {% if comment[2] == current_user.id %}
+                <form action="{{ url_for('sns.delete_comment', comment_id=comment[0]) }}" method="POST">
+                    <button class="delete-btn">削除</button>
+                </form>
+                {% endif %}
+
+                {% for reply in comments %}
+                {% if reply[5] == comment[0] %}
+
+                <div class="reply">
+
+                    <div class="reply-user">
+    {{ reply[3] }}
+</div>
+
+<div class="reply-text">
+    <span style="color:#4CAF50;font-weight:bold;">
+        @{{ comment[3] }}
+    </span>
+    {{ reply[4] }}
+</div>
+
+                    {% if reply[2] == current_user.id %}
+                    <form action="{{ url_for('sns.delete_comment', comment_id=reply[0]) }}" method="POST">
+                        <button class="delete-btn">削除</button>
+                    </form>
+                    {% endif %}
+
+                </div>
+
+                {% endif %}
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+        {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+{% endfor %}
+
+<div style="text-align:center;margin:30px 0;">
+    <a href="/home">
+        <button class="home-btn">🏠 ホームへ戻る</button>
+    </a>
+</div>

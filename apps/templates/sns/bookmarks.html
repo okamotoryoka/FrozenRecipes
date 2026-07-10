@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}保存した投稿{% endblock %}
+
+{% block content %}
+
+<style>
+
+body{
+    background-image:url("{{ url_for('static', filename='uploads/野菜.png') }}");
+    background-repeat:repeat;
+    background-size:300px;
+}
+
+.menu-title{
+    text-align:center;
+    color:#5ea55e;
+    font-size:34px;
+    margin:25px 0 35px;
+    font-weight:bold;
+}
+
+/* 一覧 */
+.post-grid{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:30px;
+}
+
+/* 投稿カード */
+.post-card{
+    width:520px;
+    background:#fff;
+    border:5px double #b8e0a5;
+    border-radius:25px;
+    overflow:hidden;
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+    transition:.25s;
+}
+
+.post-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 12px 28px rgba(0,0,0,.12);
+}
+
+/* ユーザー名 */
+.user-name{
+    padding:15px 20px;
+    font-size:20px;
+    font-weight:bold;
+    color:#4caf50;
+    border-bottom:1px solid #e8f5e9;
+}
+
+/* 写真 */
+.post-image{
+    width:100%;
+    height:300px;
+    object-fit:cover;
+}
+
+/* 本文 */
+.post-body{
+    padding:18px;
+}
+
+.caption{
+    font-size:16px;
+    line-height:1.7;
+    color:#555;
+    margin-bottom:15px;
+}
+
+/* いいね */
+.like{
+    color:#ff5c8a;
+    font-weight:bold;
+    margin-bottom:18px;
+    font-size:17px;
+}
+
+/* ボタン */
+.delete-btn{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:15px;
+    background:linear-gradient(90deg,#ffb6b9,#ff9aa2);
+    color:white;
+    font-size:15px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.delete-btn:hover{
+    transform:scale(1.03);
+}
+
+/* ホームへ戻る */
+.home-btn{
+    margin-top:35px;
+    padding:12px 30px;
+    border:none;
+    border-radius:30px;
+    background:#9bd18f;
+    color:white;
+    font-size:17px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.home-btn:hover{
+    background:#82c97c;
+}
+
+.empty{
+    text-align:center;
+    font-size:18px;
+    color:#777;
+    margin-top:60px;
+}
+
+</style>
+
+<h2 class="menu-title">🔖 保存した投稿</h2>
+
+{% if posts %}
+
+<div class="post-grid">
+
+{% for post in posts %}
+
+<div class="post-card">
+
+    <div class="user-name">
+        👤 {{ post[1] }}
+    </div>
+
+    {% if post[2] %}
+    <img src="{{ url_for('static', filename=post[2]) }}" class="post-image">
+    {% endif %}
+
+    <div class="post-body">
+
+        <div class="caption">
+            {{ post[3] }}
+        </div>
+
+        <div class="like">
+            ❤️ {{ post[4] }} いいね
+        </div>
+
+        <form action="{{ url_for('sns.delete_bookmark', post_id=post[0]) }}" method="POST">
+            <button class="delete-btn">
+                🔖 保存解除
+            </button>
+        </form>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<p class="empty">📭 保存した投稿はありません</p>
+
+{% endif %}
+
+<div style="text-align:center;">
+    <a href="/home">
+        <button class="home-btn">
+            🏠 ホームへ戻る
+        </button>
+    </a>
+</div>
+{% endblock %}
