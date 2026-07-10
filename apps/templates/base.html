@@ -22,7 +22,7 @@
 }
 
 header{
-    background: linear-gradient(135deg, #4CAF50, #66bb6a);
+    background: linear-gradient(135deg, #3bf0c6, #66bb6a);
     color: white;
     padding: 20px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -146,6 +146,7 @@ nav a:hover{
 
     <h1>冷蔵庫レシピ管理システム</h1>
 
+    {% if current_user.is_authenticated %}
     <nav>
         <a href="/home">🏠 ホーム</a>
 
@@ -163,6 +164,7 @@ nav a:hover{
 
         <a href="{{ url_for('auth.logout') }}" class="logout-btn">🚪 ログアウト</a>
     </nav>
+    {% endif %}
 
 </header>
 

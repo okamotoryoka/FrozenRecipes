@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for
 from flask_login import login_user, logout_user, login_required
 
-from apps.auth.forms import LoginForm
+from apps.auth.forms import LoginForm, RegisterForm
 from apps.auth.h2db import get_connection
 from apps.auth.login_user import LoginUser
 
@@ -22,7 +22,7 @@ def login():
 
         cur.execute(
             "SELECT ID, USERNAME, PASSWORD_HASH FROM USERS WHERE USERNAME = ?",
-            (form.username.data,)
+            (form.username.data,),
         )
 
         row = cur.fetchone()
@@ -37,6 +37,52 @@ def login():
                 return redirect(url_for("main.home"))
 
     return render_template("login.html", form=form)
+
+
+# 新規登録
+@auth_bp.route("/register", methods=["GET", "POST"])
+def register():
+
+    form = RegisterForm()
+
+    if form.validate_on_submit():
+
+        conn = get_connection()
+        cur = conn.cursor()
+
+        # ユーザー名が既にあるか確認
+        cur.execute("SELECT ID FROM USERS WHERE USERNAME = ?", (form.username.data,))
+
+        if cur.fetchone():
+            conn.close()
+            return render_template(
+                "register.html", form=form, error="このユーザー名は既に使われています。"
+            )
+
+        # 新規登録
+        cur.execute(
+            "INSERT INTO USERS (USERNAME, PASSWORD_HASH) VALUES (?, ?)",
+            (form.username.data, form.password.data),
+        )
+
+        conn.commit()
+
+        # 登録したユーザーを取得
+        cur.execute(
+            "SELECT ID, USERNAME FROM USERS WHERE USERNAME = ?", (form.username.data,)
+        )
+
+        row = cur.fetchone()
+        conn.close()
+
+        # 自動ログイン
+        user = LoginUser(row[0], row[1])
+        login_user(user)
+
+        # ホームへ
+        return redirect(url_for("main.home"))
+
+    return render_template("register.html", form=form)
 
 
 # ログアウト
