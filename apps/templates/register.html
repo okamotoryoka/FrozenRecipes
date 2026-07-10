@@ -4,39 +4,186 @@
 
 {% block content %}
 
-<h2>新規登録</h2>
+<style>
 
-<form method="POST">
+.register-container{
+    width:400px;
+    margin:40px auto;
+}
 
-    {{ form.hidden_tag() }}
+.register-title{
+    text-align:center;
+    color:#3f8fd2;
+    font-size:32px;
+    margin-bottom:30px;
+}
 
-    <div>
-        {{ form.username.label }}<br>
-        {{ form.username(size=30) }}
+.register-card{
+    background:white;
+    border:3px solid #9fd3f7;
+    border-radius:25px;
+    padding:30px;
+    box-shadow:0 10px 25px rgba(70,150,220,.18);
+}
+
+.form-group{
+    margin-bottom:20px;
+}
+
+.form-group label{
+    display:block;
+    color:#4682b4;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.form-group input{
+    width:100%;
+    padding:12px;
+    border:2px solid #d6ebfa;
+    border-radius:12px;
+    box-sizing:border-box;
+    font-size:15px;
+}
+
+.form-group input:focus{
+    outline:none;
+    border-color:#7dc7ff;
+}
+
+.register-btn{
+    width:100%;
+    background:#63b3ed;
+    color:white;
+    border:none;
+    border-radius:30px;
+    padding:14px;
+    font-size:17px;
+    cursor:pointer;
+}
+
+.register-btn:hover{
+    background:#4aa3e0;
+}
+
+.login-link{
+    text-align:center;
+    margin-top:20px;
+}
+
+.login-link a{
+    color:#3f8fd2;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.login-link a:hover{
+    text-decoration:underline;
+}
+
+.error{
+    color:red;
+    margin-bottom:15px;
+    text-align:center;
+}
+
+.password-box{
+    position: relative;
+}
+
+.password-box input{
+    width:100%;
+    padding-right:45px;
+    box-sizing:border-box;
+}
+
+.toggle-btn{
+    position:absolute;
+    right:10px;
+    top:50%;
+    transform:translateY(-50%);
+    border:none;
+    background:none;
+    cursor:pointer;
+    color:#666;
+    font-size:18px;
+}
+
+.toggle-btn:hover{
+    color:#3f8fd2;
+}
+
+</style>
+
+<div class="register-container">
+
+    <h1 class="register-title">
+        📝 新規登録
+    </h1>
+
+    <div class="register-card">
+
+        <form method="POST">
+
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ form.username.label }}
+                {{ form.username() }}
+            </div>
+
+            <div class="form-group">
+
+    {{ form.password.label }}
+
+    <div class="password-box">
+        {{ form.password(id="password") }}
+
+        <button type="button" id="togglePassword" class="toggle-btn">
+            <i class="fa-solid fa-eye"></i>
+        </button>
     </div>
 
-    <br>
+</div>
 
-    <div>
-        {{ form.password.label }}<br>
-        {{ form.password(size=30) }}
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+
+            {{ form.submit(class="register-btn") }}
+
+        </form>
+
+        <div class="login-link">
+            すでにアカウントをお持ちですか？<br><br>
+
+            <a href="{{ url_for('auth.login') }}">
+                🔐 ログインはこちら
+            </a>
+        </div>
+
     </div>
 
-    <br>
+</div>
 
-    {% if error %}
-        <p style="color:red;">{{ error }}</p>
-    {% endif %}
+<script>
+const password = document.getElementById("password");
+const toggle = document.getElementById("togglePassword");
+const icon = toggle.querySelector("i");
 
-    {{ form.submit() }}
+toggle.addEventListener("click", function () {
 
-</form>
+    if (password.type === "password") {
+        password.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+    } else {
+        password.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+    }
 
-<br>
-
-<p>
-    すでにアカウントをお持ちの方は
-    <a href="{{ url_for('auth.login') }}">ログインはこちら</a>
-</p>
+});
+</script>
 
 {% endblock %}
